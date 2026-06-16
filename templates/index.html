@@ -1,148 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BigQuery Release Notes Dashboard</title>
-    <meta name="description" content="Monitor Google Cloud BigQuery releases. Track features, deprecations, and issues, and share updates on X/Twitter.">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BigQuery Release Notes</title>
+    <meta name="description" content="A simple BigQuery release notes viewer with refresh and X/Twitter sharing.">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="logo-area">
-                <div class="logo-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                </div>
-                <div class="title-desc">
-                    <h1>BigQuery Releases</h1>
-                    <p>Track, analyze, and share the latest BigQuery updates</p>
-                </div>
+    <div class="app-shell">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Google Cloud</p>
+                <h1>BigQuery Release Notes</h1>
+                <p class="subtitle">Latest updates from the official BigQuery release notes feed.</p>
             </div>
-            <div class="header-actions">
-                <span id="last-refreshed-time" class="last-refreshed">Refreshed: --</span>
-                <button id="refresh-btn" class="btn-refresh" aria-label="Refresh release notes">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
-                    </svg>
-                    <span>Refresh</span>
-                </button>
-            </div>
+
+            <button id="refresh-button" class="refresh-button" type="button">
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Refresh</span>
+            </button>
         </header>
 
-        <!-- Stats Section -->
-        <section class="stats-container" aria-label="Release Metrics">
-            <div class="stat-card stat-total">
-                <div class="stat-info">
-                    <h3>Total Updates</h3>
-                    <div id="stat-total" class="stat-value">0</div>
-                </div>
-                <div class="stat-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-card stat-features">
-                <div class="stat-info">
-                    <h3>Features</h3>
-                    <div id="stat-features" class="stat-value">0</div>
-                </div>
-                <div class="stat-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-card stat-issues">
-                <div class="stat-info">
-                    <h3>Issues</h3>
-                    <div id="stat-issues" class="stat-value">0</div>
-                </div>
-                <div class="stat-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-card stat-deprecations">
-                <div class="stat-info">
-                    <h3>Deprecations</h3>
-                    <div id="stat-deprecations" class="stat-value">0</div>
-                </div>
-                <div class="stat-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </div>
-            </div>
+        <section class="status-row" aria-live="polite">
+            <span id="status-message">Loading release notes...</span>
+            <span id="last-updated"></span>
         </section>
 
-        <!-- Filters Section -->
-        <section class="filter-bar" aria-label="Filters and Search">
-            <div class="search-box">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input type="text" id="search-input" placeholder="Search releases by keyword, category, or date..." aria-label="Search release notes">
-            </div>
-            <div class="filter-group">
-                <select id="category-select" class="filter-select" aria-label="Filter by category">
-                    <option value="all">All Categories</option>
-                    <option value="feature">Features</option>
-                    <option value="issue">Issues</option>
-                    <option value="deprecation">Deprecations</option>
-                </select>
-                <select id="sort-select" class="filter-select" aria-label="Sort order">
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                </select>
-            </div>
-        </section>
-
-        <!-- Releases Grid -->
-        <main id="releases-grid" class="releases-grid">
-            <!-- Rendered by JS -->
-        </main>
+        <main id="release-list" class="release-list" aria-label="BigQuery release notes"></main>
     </div>
 
-    <!-- Compose Tweet Modal -->
-    <div id="tweet-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 id="modal-headline" class="modal-title">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                    <span>Share Update on X</span>
-                </h2>
-                <button id="close-tweet-modal" class="modal-close" aria-label="Close modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+    <dialog id="tweet-dialog" class="tweet-dialog">
+        <form method="dialog">
+            <div class="dialog-header">
+                <h2>Tweet This Update</h2>
+                <button id="close-dialog" class="icon-button" type="button" aria-label="Close dialog">x</button>
             </div>
-            
-            <div class="tweet-box-container">
-                <textarea id="tweet-textarea" class="tweet-textarea" placeholder="What's happening?" aria-label="Compose tweet content"></textarea>
-                <div class="tweet-stats">
-                    <span>Note: Links count as 23 characters on X.</span>
-                    <div id="tweet-char-count" class="char-counter">0 / 280</div>
+
+            <label for="tweet-text">Tweet text</label>
+            <textarea id="tweet-text" rows="7"></textarea>
+
+            <div class="dialog-footer">
+                <span id="tweet-count">0 / 280</span>
+                <div class="dialog-actions">
+                    <button id="cancel-tweet" class="secondary-button" type="button">Cancel</button>
+                    <button id="post-tweet" class="primary-button" type="button">Post on X</button>
                 </div>
             </div>
-
-            <div class="modal-actions">
-                <button id="cancel-tweet-btn" class="btn-modal btn-modal-cancel">Cancel</button>
-                <button id="send-tweet-btn" class="btn-modal btn-modal-tweet">Post on X</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notifications -->
-    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+        </form>
+    </dialog>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

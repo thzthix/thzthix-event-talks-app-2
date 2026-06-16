@@ -8,7 +8,10 @@ __pycache__/
 
 # Environments and Virtual Environments
 .env
+.env.*
+!.env.example
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -19,6 +22,7 @@ venv.bak/
 instance/
 .webassets-cache
 *.log
+flask_session/
 
 # OS metadata (Mac & Windows)
 .DS_Store
@@ -41,6 +45,10 @@ Thumbs.db
 
 # Project specific caches or testing
 .cache/
+.pycache_tmp/
 .pytest_cache/
+.ruff_cache/
 htmlcov/
 .mypy_cache/
+.coverage
+coverage.xml
