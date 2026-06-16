@@ -16,10 +16,18 @@
                 <p class="subtitle">Latest updates from the official BigQuery release notes feed.</p>
             </div>
 
-            <button id="refresh-button" class="refresh-button" type="button">
-                <span class="spinner" aria-hidden="true"></span>
-                <span>Refresh</span>
-            </button>
+            <div class="header-actions">
+                <label class="theme-toggle" for="theme-toggle">
+                    <span id="theme-toggle-label">Theme: Dark</span>
+                    <input id="theme-toggle" type="checkbox" role="switch" aria-label="Switch color theme">
+                    <span class="toggle-track" aria-hidden="true"></span>
+                </label>
+
+                <button id="refresh-button" class="refresh-button" type="button">
+                    <span class="spinner" aria-hidden="true"></span>
+                    <span>Refresh</span>
+                </button>
+            </div>
         </header>
 
         <section class="status-row" aria-live="polite">
